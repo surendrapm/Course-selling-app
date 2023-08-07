@@ -1,9 +1,10 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const fs = require('fs');
-const {authenticateJwt,SECRET} = require("../middleware/auth")
+const {SECRET} = require("../middleware/auth")
+const {authenticateJwt} = require("../middleware/auth")
 const mongoose = require('mongoose')
 const {User , Admin , Course} = require('../db/index')
+
 const router = express.Router();
 
 
@@ -18,6 +19,7 @@ router.get("/me",authenticateJwt,async(req,res)=>{
         res.status(403).json({msg:"Admin doesnt exist"})
         return
     }
+   
   res.json({
     username: admin.username
   })
@@ -35,7 +37,7 @@ router.post('/signup',async(req, res) => {
     const obj = {username:username , password:password}
     const newAdmin = new Admin(obj)
     newAdmin.save()
-    const token = jwt.sign({username,role:'admin'},SECRET,{expiresIn:"1h"});
+    const token = jwt.sign({username, role:'admin'},SECRET,{expiresIn:"1h"});
     res.json({message:'Admin created Successfully',token})
    }
 });
@@ -54,7 +56,7 @@ router.post('/login',async(req, res) => {
 router.post('/courses', authenticateJwt,async(req, res) => {
   const course = new Course(req.body)
   await course.save()
-  res.json({ message: 'Course created successfully', courseId: course.id });
+  res.json({ message: 'Course created successfully', courseId: course._id });
 });
 
 router.put('/courses/:courseId', authenticateJwt,async(req, res) => {
@@ -73,9 +75,22 @@ router.get('/courses', authenticateJwt,async(req, res) => {
 });
 
 
+router.delete('/courses/:courseId', authenticateJwt,async(req, res) => {
+  const course = await Course.findByIdAndDelete(req.params.courseId)
+   if(course){
+    res.json({ message: 'Course Deleted successfully' });
+   }else {
+    res.status(404).json({ message: 'Course not found' });
+  }
+});
+
+
+
+
 router.get('/course/:courseId',authenticateJwt,async(req,res)=>{
      const courseId = req.params.courseId
      const course = await Course.findById(courseId)
      res.json({course})
 })
+
 module.exports = router

@@ -1,12 +1,13 @@
 const express = require('express');
 const cors = require('cors')
-const app = express();
 const adminRouter = require('./routes/admin')
-const userRouter = require('./routes/admin')
+const userRouter = require('./routes/users')
 const mongoose = require('mongoose')
 
-app.use(express.json());
+const app = express();
 app.use(cors())
+app.use(express.json());
+
 
 //all Admin routes link
 app.use('/admin',adminRouter)
