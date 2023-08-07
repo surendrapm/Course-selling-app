@@ -3,8 +3,21 @@ const express = require('express');
 const {authenticateJwt,SECRET} = require('../middleware/auth')
 const jwt = require('jsonwebtoken');
 const {User,Course,Admin} = require('../db/index')
+const mongoose = require('mongoose')
 const router = express.Router();
 
+//me route
+router.get("/me",authenticateJwt,async(req,res)=>{
+  const user = await User.findOne({username:req.user.username})
+  if(!user){
+      res.status(403).json({msg:"User doesnt exist"})
+      return
+  }
+ 
+res.json({
+  username: user.username
+})
+});
 
 
 router.post('/signup',  async(req, res) => {

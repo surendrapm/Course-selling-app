@@ -1,4 +1,4 @@
-import { Card, Typography ,TextField,Button} from "@mui/material"
+import { Card, Typography ,TextField,Button, InputLabel, FormControl, Select, MenuItem} from "@mui/material"
 import { useState } from "react"
 import axios from "axios"
 
@@ -8,6 +8,7 @@ function Createcourse(){
     const [Description, setDescription] = useState('')
     const [imageLink,setimageLink] = useState('')
     const [price,setPrice] = useState(0)
+    const [category,setCategory] = useState('')
     return (
         <div style={{ }}>
              <div style={{
@@ -69,7 +70,27 @@ function Createcourse(){
                     setPrice(e.target.value)
                   }}
              />            
-                   
+                   <br /><br />
+                   <FormControl fullWidth>
+                <InputLabel id="demo">Category</InputLabel>
+                <Select labelId="demo-simple-select-label"
+                  id="demo-simple"
+                  value={category}
+                  label="Category"
+                  onChange={(e)=>{
+                     setCategory(e.target.value)
+                  }}
+                > <MenuItem value="None">None</MenuItem>
+                <MenuItem value="web-devlopment">Web Devlopment</MenuItem>
+                <MenuItem value="andriod-devlopment">Android Devlopment</MenuItem>
+                <MenuItem value="ai-ml">AI and Machine Learning</MenuItem>
+                <MenuItem value="data-science">Data Science</MenuItem>
+                <MenuItem value="web3">Web3</MenuItem>
+                <MenuItem value="game-devlopment">Game Devlopment</MenuItem>
+                
+
+                </Select>
+                </FormControl>
              <Button variant="contained"
                  style={{
                     marginTop:20
@@ -80,6 +101,7 @@ function Createcourse(){
                             Description:Description,
                             imageLink:imageLink,
                             published:true,
+                            category:category,
                             price:price
                     },{
                       headers:{

@@ -20,6 +20,7 @@ const courseSchema = new mongoose.Schema({
     Description:String,
     price:Number,
     imageLink:String,
+    category:String,
     published:Boolean
 })
 

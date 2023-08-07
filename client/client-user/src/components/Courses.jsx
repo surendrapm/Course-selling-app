@@ -76,7 +76,7 @@ function Courses(){
             console.log(course._id)
            navigate("/courses/" + course._id);
            }}
-        >Edit</Button> 
+        >Buy</Button> 
         <Button size = {'large'}
          variant="outlined" style={{marginLeft:30}}
          onClick={async()=>{

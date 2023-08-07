@@ -15,7 +15,7 @@ function Appbar(){
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
                useEffect(()=>{
                    async function getUsername(){
-                    const response = await axios.get("http://localhost:3000/admin/me",{
+                    const response = await axios.get("http://localhost:3000/user/me",{
                         headers:{
                             "Authorization":'Bearer ' + localStorage.getItem("token")
                         }
@@ -25,6 +25,7 @@ function Appbar(){
                           
                        if(data.username){
                         setUserEmail(data.username)
+                      
                        }
                   }
                   
@@ -92,13 +93,13 @@ function Appbar(){
         >
           {/* Content of the drawer */}
            <List>
-           {['AddCourse','Allcourses','Spam'].map((text)=>(
+           {['Purchased Courses','Allcourses','profile'].map((text)=>(
            <ListItem key={text} disablePadding>
             <ListItemButton>
               <ListItemText primary={text} onClick={()=>{
                 switch(text){
                   case "AddCourse":
-                    navigate('admin/createcourse')
+                    navigate('user/purcahsed')
                     handleDrawerClose()
                     break;
                   case 'Allcourses':
@@ -136,7 +137,7 @@ function Appbar(){
                 <Button variant={"contained"}
                  onClick={()=>{
                     
-                    navigate("admin/signup")
+                    navigate("user/signup")
 
                  }}
                 >Signup</Button>
@@ -144,7 +145,7 @@ function Appbar(){
                 <div>
                 <Button variant={"contained"}
                  onClick={()=>{
-                   navigate("admin/signin")
+                   navigate("user/signin")
                  }}
                 >SignIn</Button>
                 </div>

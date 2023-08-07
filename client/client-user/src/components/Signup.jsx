@@ -22,7 +22,7 @@ return(
                  justifyContent:"center"
                  }}>
                 <Typography variant={'h6'}>
-                Welcome to Coursera. Sign Up below
+                Welcome to Coursera. Sign Up below as a user
                 </Typography>
                  
             </div>
@@ -63,7 +63,7 @@ return(
      variant="contained"
      onClick={async ()=>{
 
-       const res = await axios.post("http://localhost:3000/admin/signup",{
+       const res = await axios.post("http://localhost:3000/user/signup",{
             
                 username:email,
                 password:password

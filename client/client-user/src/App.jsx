@@ -6,6 +6,8 @@ import Signin from "./components/Signin"
 import Createcourse from './components/Createcourse';
 import Courses from './components/Courses';
 import Course from './components/Course';
+import { Landing } from './components/Landing';
+import Homepage from './components/HomePage';
 import {
   atom,
   selector,
@@ -13,7 +15,8 @@ import {
   useRecoilValue,
   RecoilRoot,
 } from 'recoil';
-import { Landing } from './components/Landing';
+
+
  
 
 
@@ -27,12 +30,13 @@ function App() {
       <Router> 
       <Appbar></Appbar>
       <Routes>
-           <Route path={"admin/signin"} element={<Signin/>}></Route>
-           <Route path={"admin/signup"} element={<Signup/>}></Route>
-           <Route path={'admin/createcourse'} element={<Createcourse/>}></Route>
-           <Route path={'admin/courses'} element={<Courses/>}></Route>
+           <Route path={"user/signin"} element={<Signin/>}></Route>
+           <Route path={"user/signup"} element={<Signup/>}></Route>
+           <Route path={'user/createcourse'} element={<Createcourse/>}></Route>
+           <Route path={'user/courses'} element={<Courses/>}></Route>
            <Route path={'/courses/:courseId'} element={<Course />}></Route>
            <Route path={'/'} element={<Landing/>}></Route>
+           <Route path={'user/home'} element={<Homepage/>}></Route>
        </Routes>
       </Router>
       
