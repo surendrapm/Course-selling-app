@@ -1,16 +1,16 @@
 import { useEffect , useState} from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { Button, Card, Grid, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, Divider, Grid, List, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { Loading } from "./Loading";
-
-function Course(){
+import StripeCheckout from 'react-stripe-checkout'
+export const BuyCourse = ()=>{
     let { courseId } = useParams();
     const [courses , setCourses] = useState([])
   const [loading,setLoading] = useState(true)
     
       const editCourse = async () => {
-                const response =await axios.get("http://localhost:3000/admin/courses",{
+                const response =await axios.get("http://localhost:3000/user/courses",{
                 headers:{
                   "Authorization" : "Bearer " + localStorage.getItem("token"),
                 }
@@ -48,18 +48,20 @@ function Course(){
 }
 
    return <div >
-    <GrayTopper title={course.title} />
+    <GrayTopper course={course} />
     <Grid container>
             <Grid item lg={8} md={12} sm={12}>
-            <UpdateCard  
+            <DetailsCard  
               course={course}
               setCourses={setCourses}/>
             </Grid>
             <Grid item lg={4} md={12} sm={12}>
             <CourseCard
                title={course.title}
+               Description={course.Description}
                price={course.price}
                imageLink={course.imageLink}
+               _id={course._id}
             />
             </Grid>
          </Grid>
@@ -67,13 +69,16 @@ function Course(){
 }
 
 
-function GrayTopper({title}){
+function GrayTopper({course}){
 
   return <div style={{height:250, background:'#212121',top:0,width:"100vw",zIndex:0,marginBottom:-250}}>
         <div style={{height:250, display:"flex", justifyContent:"center", alignItems:"center"}}>
               <div>
                 <Typography style={{color:"white",fontWeight:600}} variant="h3" textAlign={"center"}>
-                     {title}
+                     {course.title}
+                </Typography>
+                <Typography style={{color:"white",fontWeight:600}} variant="h3" textAlign={"center"}>
+                     {course.Description}
                 </Typography>
               </div>
         </div>
@@ -85,7 +90,7 @@ function GrayTopper({title}){
 
 
 
-function UpdateCard({course,setCourses}){
+function DetailsCard({course,setCourses}){
 
     const [title,setTitle] = useState(course.title)
     const [Description, setDescription] = useState(course.Description)
@@ -95,56 +100,12 @@ function UpdateCard({course,setCourses}){
 
     return <>
     <div style={{ display: "flex", justifyContent: "center", }}>
-        <Card variant="outlined" style={{maxWidthdth: 600,marginTop:200}}>
+        <Card variant="outlined" style={{maxWidthdth: 600,marginTop:250}}>
        <div style={{padding:20}}>
-              <Typography style={{marginBottom:10}}>Update Course Details
+              <Typography style={{marginBottom:10}}> Course Details
       </Typography>
   
-        <TextField
-            value={title}
-            style={{marginBottom:10}}
-            fullWidth={true}
-            id="title-ip"
-            label="Title"
-            variant="outlined"
-            onChange={(e) => {
-              setTitle(e.target.value);
-            } } />
-
-          <TextField
-            value={Description}
-            style={{marginBottom:10}}
-            fullWidth={true}
-            id="desc-ip"
-            label="Description"
-            variant="outlined"
-            onChange={(e) => {
-              setDescription(e.target.value);
-            } } />
-          
-          <TextField
-            value={imageLink}
-            style={{marginBottom:10}}
-            fullWidth={true}
-            id="img-ip"
-            label="Image link"
-            variant="outlined"
-            onChange={(e) => {
-              setimageLink(e.target.value);
-            } } />
-
-  
-          <TextField
-            value={price}
-            fullWidth={true}
-            style={{marginBottom:10}}
-            id="desc-ip"
-            label="Price"
-            variant="outlined"
-            onChange={(e) => {
-              Setprice(e.target.value);
-            } } />
-
+       
 
           <Button variant="contained"
             style={{
@@ -152,39 +113,34 @@ function UpdateCard({course,setCourses}){
             }}
             onClick={async () => {
 
-              await axios.put("http://localhost:3000/admin/courses/" + course._id, {
-                title: title,
-                Description: Description,
-                imageLink: imageLink,
-                published: true,
-                price
-              }, {
+          const res = await axios.get("http://localhost:3000/user/courses/" + course._id, {
+              
                 headers: {
                   "Content-Type": "application/json",
                   "Authorization": 'Bearer ' + localStorage.getItem("token")
                 }
-              });
-              let updatedCourse = {
-                // eslint-disable-next-line react/prop-types
-                _id: course._id,
-                title: title,
-                Description: Description,
-                imageLink: imageLink,
-                price
-              };
+      
+              }).then(res=>{
+                 if(res.ok) return res.json()
+              }).then(({url})=>{
+                  window.location="/"
+              })
+             
+
+            
               setCourses(updatedCourse);
                 alert("course updated sucessfully :)")
                 navigate('/admin/courses')
             } }
 
-          >update  course</Button>
+          >Buy course</Button>
         </div>
         </Card>
       </div></>
    
  }
 
-function CourseCard({ title, Description, imageLink ,price}){
+function CourseCard({ title, Description, imageLink ,price,_id}){
  
     return <div style={{display:"flex",marginTop:50,justifyContent: 'center',width:"100%"}}>
         <Card style={{
@@ -199,17 +155,54 @@ function CourseCard({ title, Description, imageLink ,price}){
   }}>
       <img src={imageLink} style={{width:350}} />
       <div style={{marginLeft:10}}>
-          <Typography textAlign={"center"} variant="h4">{title}</Typography>
+          <Typography textAlign={"center"} variant="h4"></Typography>
+          <Typography textAlign={'center'}>Get access to only this course forever when you buy it for the price below.</Typography>
           <Typography variant="subtitle2" style={{color:"grey"}}>Price</Typography>
-          <Typography variant="subtitle1" >
-            ${price} 
+          <Typography  variant="h3" fontWeight={700}>
+          ₹ {price} 
             </Typography>
-        
-          <Button size = {'large'} variant="contained">Course </Button>
+         
+            
+                
+
+
+
+
+
+          <Button size = {'large'} variant="contained"style={{width:"330px"}}
+          onClick={async()=>{
+            try {
+              const response = await axios.post(
+                `http://localhost:3000/user/courses/${_id}`,
+                {},
+                {
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                  },
+                }
+              )
+                       const data = response.data
+                       console.log(data)
+            } catch (error) {
+              // Handle error, e.g., show an error message or log the error
+              console.error("Error purchasing course:", error);
+            }
+          }}
+          > <StripeCheckout name="sure"></StripeCheckout></Button>
+          <Button size = {'large'}  fullWidth>apply coupon</Button>
+         <Box  sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper',marginTop:2 }}>
+         <Divider/>
+         <Typography variant="subtitle2" style={{color:"grey"}}>What You Will get :</Typography>
+           <List>
+
+           </List>
+
+         </Box>
+         
+               
       </div>
    </Card>
   </div>
 }
 
 
-export default Course;

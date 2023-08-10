@@ -74,22 +74,14 @@ function Courses(){
          <Button size = {'large'} variant="contained"
            onClick={()=>{
             console.log(course._id)
-           navigate("/courses/" + course._id);
+           navigate("/buycourse/" + course._id);
            }}
-        >Buy</Button> 
+        >Checkout</Button> 
         <Button size = {'large'}
          variant="outlined" style={{marginLeft:30}}
-         onClick={async()=>{
-           const res = await axios.delete('http://localhost:3000/admin/courses/'+ course._id,{
-            headers:{ 
-                "Authorization":'Bearer ' + localStorage.getItem("token")
-            }
-           })
-            const data = res.data
-            console.log(data)
-            alert(data.title,'Course deleted  successfully')
-         }}
-         >delete</Button>
+  
+        
+         >Descrpition</Button>
          </div>
         
         

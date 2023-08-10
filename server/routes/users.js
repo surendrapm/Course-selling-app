@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const {User,Course,Admin} = require('../db/index')
 const mongoose = require('mongoose')
 const router = express.Router();
-
+const stripe = require('stripe')("pk_test_51NdWCsSJpQyQP6VD1RRxLA4EzQMyQZFf9qeBQVJ2KsGox6E7KwzZGFevEFo1dqexFHlGCWy3flw4Pe2KRAlhoIxK00JUw4aG8P")
 //me route
 router.get("/me",authenticateJwt,async(req,res)=>{
   const user = await User.findOne({username:req.user.username})
@@ -51,6 +51,7 @@ router.post('/signup',  async(req, res) => {
   
   router.post('/courses/:courseId', authenticateJwt, async(req, res) => {
     const course = await Course.findById(req.params.courseId);
+    
     if (course) {
       const user = await User.findOne({username: req.user.username});
       if (user) {  

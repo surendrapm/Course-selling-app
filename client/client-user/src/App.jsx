@@ -15,6 +15,7 @@ import {
   useRecoilValue,
   RecoilRoot,
 } from 'recoil';
+import { BuyCourse } from './components/BuyCourses';
 
 
  
@@ -34,7 +35,7 @@ function App() {
            <Route path={"user/signup"} element={<Signup/>}></Route>
            <Route path={'user/createcourse'} element={<Createcourse/>}></Route>
            <Route path={'user/courses'} element={<Courses/>}></Route>
-           <Route path={'/courses/:courseId'} element={<Course />}></Route>
+           <Route path={'/buycourse/:courseId'} element={<BuyCourse/>}></Route>
            <Route path={'/'} element={<Landing/>}></Route>
            <Route path={'user/home'} element={<Homepage/>}></Route>
        </Routes>

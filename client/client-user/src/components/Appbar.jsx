@@ -103,7 +103,7 @@ function Appbar(){
                     handleDrawerClose()
                     break;
                   case 'Allcourses':
-                    navigate('admin/courses')
+                    navigate('user/courses')
                     handleDrawerClose()
                     break;
                 }
