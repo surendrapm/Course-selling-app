@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { Box, Button, Card, Divider, Grid, List, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { Loading } from "./Loading";
-import StripeCheckout from 'react-stripe-checkout'
+
 export const BuyCourse = ()=>{
     let { courseId } = useParams();
     const [courses , setCourses] = useState([])
@@ -90,6 +90,8 @@ function GrayTopper({course}){
 
 
 
+
+
 function DetailsCard({course,setCourses}){
 
     const [title,setTitle] = useState(course.title)
@@ -114,11 +116,9 @@ function DetailsCard({course,setCourses}){
             onClick={async () => {
 
           const res = await axios.get("http://localhost:3000/user/courses/" + course._id, {
-              
-                headers: {
-                  "Content-Type": "application/json",
-                  "Authorization": 'Bearer ' + localStorage.getItem("token")
-                }
+            headers:{
+              "Authorization" : "Bearer " + localStorage.getItem("token"),
+            }
       
               }).then(res=>{
                  if(res.ok) return res.json()
@@ -141,7 +141,65 @@ function DetailsCard({course,setCourses}){
  }
 
 function CourseCard({ title, Description, imageLink ,price,_id}){
- 
+         
+         const initPayement = (data) =>{
+          console.log(data)
+                   const options = {
+                     key:'rzp_test_V0psw3FvY4z79P',
+                     amount:data.amount,
+                     currency:data.currency,
+                     name:title,
+                     description:"test transaction",
+                     image:imageLink,
+                     order_id:data.id,
+                     handler: async(response) =>{
+                       console.log("ooooooooooooo")
+                         console.log(response)
+                        try{
+                           const paymentData = {
+                            razorpay_order_id:response.razorpay_order_id,
+                            razorpay_payment_id:response.razorpay_payment_id,
+                            razorpay_signature:response.razorpay_signature
+                           }
+                            const res = await axios.post("http://localhost:3000/user/paymentverify/"+_id,
+                            paymentData,
+                            {
+                              headers: {
+                                
+                                "Authorization": 'Bearer ' + localStorage.getItem("token")
+                              }
+                            })
+                           
+                            alert("purcahsed")
+                        }catch(err){
+                          console.log(error);
+                        }
+                     },
+                     theme:{
+                       color:"#3399cc",
+                     },
+                   };
+                   const rzp1 = new window.Razorpay(options);
+		              rzp1.open();
+         };
+
+           const handelPayment = async()=>{
+                  console.log('wdihju')
+               try{
+                const res = await axios.post("http://localhost:3000/user/courses/"+ _id,
+                {},{
+                  headers: {
+                    "Authorization": 'Bearer ' + localStorage.getItem("token")
+                  }
+                })
+                        const data = res.data
+                   initPayement(data.data)
+               }catch(error){
+                    console.log(error)
+               }
+         }
+
+  
     return <div style={{display:"flex",marginTop:50,justifyContent: 'center',width:"100%"}}>
         <Card style={{
       
@@ -170,25 +228,11 @@ function CourseCard({ title, Description, imageLink ,price,_id}){
 
 
           <Button size = {'large'} variant="contained"style={{width:"330px"}}
-          onClick={async()=>{
-            try {
-              const response = await axios.post(
-                `http://localhost:3000/user/courses/${_id}`,
-                {},
-                {
-                  headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                  },
-                }
-              )
-                       const data = response.data
-                       console.log(data)
-            } catch (error) {
-              // Handle error, e.g., show an error message or log the error
-              console.error("Error purchasing course:", error);
-            }
-          }}
-          > <StripeCheckout name="sure"></StripeCheckout></Button>
+           onClick={()=>{
+               handelPayment()
+           }}   
+      
+           >buy </Button>
           <Button size = {'large'}  fullWidth>apply coupon</Button>
          <Box  sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper',marginTop:2 }}>
          <Divider/>
