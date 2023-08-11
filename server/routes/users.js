@@ -3,9 +3,12 @@ const express = require('express');
 const {authenticateJwt,SECRET} = require('../middleware/auth')
 const jwt = require('jsonwebtoken');
 const {User,Course,Admin} = require('../db/index')
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+
 const router = express.Router();
-const stripe = require('stripe')("pk_test_51NdWCsSJpQyQP6VD1RRxLA4EzQMyQZFf9qeBQVJ2KsGox6E7KwzZGFevEFo1dqexFHlGCWy3flw4Pe2KRAlhoIxK00JUw4aG8P")
+const Razorpay = require('razorpay')
+const crypto = require('crypto');
+
 //me route
 router.get("/me",authenticateJwt,async(req,res)=>{
   const user = await User.findOne({username:req.user.username})
@@ -50,23 +53,80 @@ router.post('/signup',  async(req, res) => {
   });
   
   router.post('/courses/:courseId', authenticateJwt, async(req, res) => {
-    const course = await Course.findById(req.params.courseId);
-    
-    if (course) {
-      const user = await User.findOne({username: req.user.username});
-      if (user) {  
-        user.purchasedCourses.push(course);
-        await user.save();
-        res.json({ message: 'Course purchased successfully' });
-      } else {
-        res.status(403).json({ message: 'User not found' });
+        console.log('dshj')
+     try{
+      const course = await Course.findById(req.params.courseId);
+      const user = await User.findOne()
+      if(!course){
+          res.status(404).json({ message: 'Course not found' });
       }
-    } else {
-      res.status(404).json({ message: 'Course not found' });
-    }
+      if(!user){
+         res.status(404).json({message:'User not found'})
+      }
+    
+      const instance = new Razorpay({
+         key_id:process.env.RAZORPAY_API_KEY,
+         key_secret:process.env.RAZORPAY_API_SECRET
+      });
+            console.log(course.price)
+       const options = {
+           amount:course.price*100,
+           currency:"INR",
+           receipt:crypto.randomBytes(10).toString('hex'),
+          };
+           
+             instance.orders.create(options,(error,order)=>{
+                if(error){
+                  console.log(error);
+                  return res.status(500).json({msg:"Something Went Wrong"})
+                }
+                 res.status(200).json({data:order})
+             })
+              } catch(error){
+        console.log(error);
+        res.status(500).json({message:"internal server Error!"})
+     }
   });
   
-  router.get('/purchasedCourses', authenticateJwt, async(req, res) => {
+
+
+router.post('/paymentverify/:courseId',authenticateJwt,async(req,res)=>{
+          try{
+                 console.log('im entered',req.body)
+               const {razorpay_order_id,razorpay_payment_id,razorpay_signature} = req.body;
+               console.log('razorpay_order_id',razorpay_order_id)
+               console.log('razorpay_payment_id',razorpay_payment_id)
+               const sign = razorpay_order_id + "|" + razorpay_payment_id;
+               const expectedSign = crypto
+               .createHmac("sha256",process.env.RAZORPAY_API_SECRET)
+               .update(sign.toString())
+               .digest('hex');
+
+               if(razorpay_signature === expectedSign){
+                console.log('im entered222')
+                       const course = await Course.findById(req.params.courseId);
+                       const user = await User.findOne({username: req.user.username});
+                       console.log(user)
+                       user.purchasedCourses.push(course);
+                       await user.save();
+                       res.json({ message: 'Course purchased successfully' });
+                    }else{
+                       return res.status(400).json({ message: "Invalid signature sent!" });
+                    }
+                  }catch(err){
+                    res.status(500).json({ message: "Internal Server Error!" });
+                   console.log(error)
+          }
+})
+
+
+
+
+
+
+
+
+  router.get('/purchasedCourses', authenticateJwt,async(req, res) => {
     const user = await User.findOne({username:req.user.username}).populate('purchasedCourses')
     if (user) {
       res.json({ purchasedCourses: user.purchasedCourses || [] });

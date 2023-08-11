@@ -1,8 +1,13 @@
+
+
 const express = require('express');
 const cors = require('cors')
 const adminRouter = require('./routes/admin')
 const userRouter = require('./routes/users')
 const mongoose = require('mongoose')
+const Razorpay =  require('razorpay')
+const dotenv = require('dotenv')
+dotenv.config()
 
 const app = express();
 app.use(express.json())
