@@ -184,7 +184,7 @@ function CourseCard({ title, Description, imageLink ,price,_id}){
          };
 
            const handelPayment = async()=>{
-                  console.log('wdihju')
+                
                try{
                 const res = await axios.post("http://localhost:3000/user/courses/"+ _id,
                 {},{
