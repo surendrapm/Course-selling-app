@@ -5,6 +5,7 @@ import axios from "axios"
 
 import { useEffect, useState } from "react"
 import {useNavigate } from "react-router-dom";
+import CourseCard from "./CourseCard";
 
 
 
@@ -67,7 +68,8 @@ function Courses(){
         padding:20
     }}>
 
-          <Typography textAlign={"center"} variant="h5">{course.title}</Typography>
+             <CourseCard course={course}></CourseCard>
+          {/* <Typography textAlign={"center"} variant="h5">{course.title}</Typography>
           <img src={course.imageLink} style={{width:310 ,height:200}}  />
           <Typography textAlign={"center"} variant="subtitle1">{course.Description}</Typography>
          <div style={{display:"flex" ,justifyContent:"center",marginTop:20}}>
@@ -91,7 +93,7 @@ function Courses(){
          }}
          >delete</Button>
          </div>
-        
+         */}
         
 
     </Card>

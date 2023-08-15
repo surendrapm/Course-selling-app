@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { Button, Card, Grid, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { Loading } from "./Loading";
+import { UpdateCourses } from "./UpdateCourse";
 
 function Course(){
     let { courseId } = useParams();
@@ -51,9 +52,11 @@ function Course(){
     <GrayTopper title={course.title} />
     <Grid container>
             <Grid item lg={8} md={12} sm={12}>
-            <UpdateCard  
+            <UpdateCourses
               course={course}
-              setCourses={setCourses}/>
+              setCourses={setCourses}
+            ></UpdateCourses>
+             
             </Grid>
             <Grid item lg={4} md={12} sm={12}>
             <CourseCard
@@ -67,18 +70,6 @@ function Course(){
 }
 
 
-function GrayTopper({title}){
-
-  return <div style={{height:250, background:'#212121',top:0,width:"100vw",zIndex:0,marginBottom:-250}}>
-        <div style={{height:250, display:"flex", justifyContent:"center", alignItems:"center"}}>
-              <div>
-                <Typography style={{color:"white",fontWeight:600}} variant="h3" textAlign={"center"}>
-                     {title}
-                </Typography>
-              </div>
-        </div>
-  </div>
-}
 
 
 
@@ -95,7 +86,7 @@ function UpdateCard({course,setCourses}){
 
     return <>
     <div style={{ display: "flex", justifyContent: "center", }}>
-        <Card variant="outlined" style={{maxWidthdth: 600,marginTop:200}}>
+        <Card variant="outlined" style={{maxWidth: 600,marginTop:200}}>
        <div style={{padding:20}}>
               <Typography style={{marginBottom:10}}>Update Course Details
       </Typography>
@@ -184,32 +175,6 @@ function UpdateCard({course,setCourses}){
    
  }
 
-function CourseCard({ title, Description, imageLink ,price}){
- 
-    return <div style={{display:"flex",marginTop:50,justifyContent: 'center',width:"100%"}}>
-        <Card style={{
-      
-      margin:10,
-      width:350, 
-      minHeight:200,
-      borderRadius:20,
-      marginRight:50,
-      paddingBottom:15,
-      zIndex:2
-  }}>
-      <img src={imageLink} style={{width:350}} />
-      <div style={{marginLeft:10}}>
-          <Typography textAlign={"center"} variant="h4">{title}</Typography>
-          <Typography variant="subtitle2" style={{color:"grey"}}>Price</Typography>
-          <Typography variant="subtitle1" >
-            ${price} 
-            </Typography>
-        
-          <Button size = {'large'} variant="contained">delete</Button>
-      </div>
-   </Card>
-  </div>
-}
 
 
 export default Course;
