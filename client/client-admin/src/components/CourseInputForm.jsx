@@ -1,44 +1,37 @@
 import { Card, Typography ,TextField,Button, InputLabel, FormControl, Select, MenuItem} from "@mui/material"
-import { useState } from "react"
-import axios from "axios"
-import CustomButton from "./CustomButton"
+import {  useState } from "react"
 
 
 
-
-function CourseInputForm({course,setC}){
-  const {title, setTitle, Description, setDescription, imageLink, setimageLink, price, setPrice , category ,setCategory} = props
-
-  async function handleUpdateCourse(){
-    return 
-  }
-  
-  async function handleCreateCourse(){
-       const response = axios.post("http://localhost:3000/admin/courses",{
-        title:title,
-        Description:Description,
-        imageLink:imageLink,
-        published:true,
-        category:category,
-        price:price
-       },
-       {headers:{
-        Authorization:"Bearer " + localStorage.getItem("token")
-       }
-          
-      })
-      alert("Added Course!")
-  }
+function CourseInputForm({
+  Isupdate,
+  Createcourse,
+  Updatecourse,
+  title,
+  setTitle,
+  Description,
+  setDescription,
+  imageLink,
+  setimageLink,
+  category,
+  setCategory,
+  price,
+  setPrice
+}) {
+   
+      const[message,setMessage] = useState("");       
 
      return <>
        <div style={{ }}>
              <div style={{
                 display:"flex",
                 justifyContent:"center",
+                marginTop:300,
+                
              
              }}>
             <Typography variant={'h6'} >
-            Add Course Here...
+          {Isupdate?"Update Course here...":"Create New Course here..."}
             </Typography>
             </div>
              <div style={{
@@ -48,7 +41,8 @@ function CourseInputForm({course,setC}){
                   <Card variant="outlined"
                     style={{
                         width:400,
-                        padding:20
+                        padding:20,
+                
                     }}
                   >
                        <TextField 
@@ -64,7 +58,7 @@ function CourseInputForm({course,setC}){
                           }}
               />
             
-     <br /> <br />
+ 
              <TextField 
                 value={Description}
                 style={{marginBottom:10}}
@@ -121,7 +115,12 @@ function CourseInputForm({course,setC}){
 
                 </Select>
                 </FormControl>
-                 <CustomButton  handleCreateCourse={handleCreateCourse} btnTitle={"Add course"}/>
+                <Button size = {'large'} variant="contained"
+                 onClick={()=>(
+                   Isupdate?Updatecourse():Createcourse()
+                 )}
+                >{Isupdate?"Update":"add"}</Button>
+               
               </Card>
              
              </div>

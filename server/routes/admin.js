@@ -87,9 +87,10 @@ router.delete('/courses/:courseId', authenticateJwt,async(req, res) => {
 
 
 
-router.get('/course/:courseId',authenticateJwt,async(req,res)=>{
+router.get('/courses/:courseId',authenticateJwt,async(req,res)=>{
      const courseId = req.params.courseId
      const course = await Course.findById(courseId)
+     console.log(course)
      res.json({course})
 })
 

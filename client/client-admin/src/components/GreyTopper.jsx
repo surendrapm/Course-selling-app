@@ -6,7 +6,7 @@ function GrayTopper({title}){
           <div style={{height:250, display:"flex", justifyContent:"center", alignItems:"center"}}>
                 <div>
                   <Typography style={{color:"white",fontWeight:600}} variant="h3" textAlign={"center"}>
-                      {}
+                      {title}
                   </Typography>
                 </div>
           </div>

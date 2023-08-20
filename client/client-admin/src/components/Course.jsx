@@ -4,65 +4,27 @@ import { Button, Card, Grid, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { Loading } from "./Loading";
 import { UpdateCourses } from "./UpdateCourse";
+import GrayTopper from "./GreyTopper"
+import CourseCard from "./CourseCard";
 
 function Course(){
-    let { courseId } = useParams();
-    const [courses , setCourses] = useState([])
-  const [loading,setLoading] = useState(true)
-    
-      const editCourse = async () => {
-                const response =await axios.get("http://localhost:3000/admin/courses",{
-                headers:{
-                  "Authorization" : "Bearer " + localStorage.getItem("token"),
-                }
-              })
-                            let data = response.data
-                           
-                            setCourses(data.courses)
-                            setLoading(false)
-            }
-            useEffect(() => {
-              editCourse();
-            },[])          
+        
             
     
 
-  console.log('Courses:',courses)
-  let course = null;
-  if(!loading){
-    for(let i=0; i<courses.length ; i++){
-      if(courses[i]._id == courseId){
-         course = courses[i]
-      }
-   }
-  }
 
 
- if(loading){
-    return <div> 
-        <Loading></Loading>
-    </div>
- }
-
- if (!course) {
-  return <div>No course found.</div>;
-}
-
-   return <div >
+   return <div>
+    
     <GrayTopper title={course.title} />
     <Grid container>
             <Grid item lg={8} md={12} sm={12}>
-            <UpdateCourses
-              course={course}
-              setCourses={setCourses}
-            ></UpdateCourses>
+            
              
             </Grid>
             <Grid item lg={4} md={12} sm={12}>
             <CourseCard
-               title={course.title}
-               price={course.price}
-               imageLink={course.imagelink}
+                course={course}
             />
             </Grid>
          </Grid>
