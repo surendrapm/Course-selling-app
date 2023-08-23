@@ -3,6 +3,7 @@ import TextField from '@mui/material/TextField';
 import Card from '@mui/material/Card';
 import { Typography } from '@mui/material';
 import { useState } from 'react';
+import axios from 'axios';
 function Signin(){
     const [email,setEmail] = useState("")
     const [password,setPassword] = useState("")
@@ -21,7 +22,7 @@ return(
                  justifyContent:"center"
                  }}>
                 <Typography variant={'h6'}>
-                Welcome to Back to Coursera. Sign in below
+                   Welcome to Back to Coursera. Sign in below
                 </Typography>
                  
             </div>
@@ -59,25 +60,17 @@ return(
      <br /> <br />
      <Button size = {'large'} 
      variant="contained"
-     onClick={()=>{
-        function callback2(data){
-            console.log(data.token)
-            localStorage.setItem("token",data.token)
-        }
-        function callback1(res){
-             res.json().then(callback2)
-        }
-        fetch("http://localhost:3000/admin/login",{
-            method:"POST",
-            headers:{
-                "Content-Type": "application/json",
-                "Authorization":"Bearer" + localStorage.getItem("token")
-            },
-            body:JSON.stringify({
-                username:email,
-                password:password
-            })
-        }).then(callback1)
+     onClick={async()=>{
+        console.log(email,password)
+         const res = await axios.post("http://localhost:3000/user/login",{
+            username:email,
+            password:password,
+         })
+
+         const data = res.data
+         localStorage.setItem("token",data.token)
+           window.location ="/"
+    
      }}
      >Sign In</Button>
     

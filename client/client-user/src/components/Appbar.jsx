@@ -7,7 +7,7 @@ import AppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Drawer from '@mui/material/Drawer';
-import Createcourse from './Createcourse'
+
 function Appbar(){
       
   const navigate = useNavigate()
@@ -93,13 +93,13 @@ function Appbar(){
         >
           {/* Content of the drawer */}
            <List>
-           {['Purchased Courses','Allcourses','profile'].map((text)=>(
+           {['PurchasedCourses','Allcourses','profile'].map((text)=>(
            <ListItem key={text} disablePadding>
             <ListItemButton>
               <ListItemText primary={text} onClick={()=>{
                 switch(text){
-                  case "AddCourse":
-                    navigate('user/purcahsed')
+                  case "PurchasedCourses":
+                    navigate('user/purchased')
                     handleDrawerClose()
                     break;
                   case 'Allcourses':
