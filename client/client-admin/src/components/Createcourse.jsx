@@ -10,7 +10,7 @@ function Createcourse(props){
     const [imageLink,setimageLink] = useState('')
     const [price,setPrice] = useState(0)
     const [category,setCategory] = useState('None')
-
+    const [published,setPublished] = useState(false)
 
 useEffect(()=>{
    if(props.IsUpdate){
@@ -19,6 +19,7 @@ useEffect(()=>{
     setPrice(props.course.price)
     setimageLink(props.course.imageLink)
     setCategory(props.course.category)
+    setPublished(props.course.published)
    }
 },[props.course])
 
@@ -46,21 +47,33 @@ useEffect(()=>{
 //function to update the course
 async function handleUpdateCourse(){
    const res = axios.put(`http://localhost:3000/admin/courses/${props.course._id}`,{
+    title:title,
+    Description:Description,
+    imageLink:imageLink,
+    category:category,
+    price:price
+  },
+  {
      headers:{
-       "Authorization": 'Bearer ' + localStorage.getItem("token")
+       Authorization: 'Bearer ' + localStorage.getItem("token")
      },
-     title,
-     Description,
-     imageLink,
-     price,
-     category
-   })
+     
+    })
    const data = res.data
    alert("course updated sucessfully :)")
-     navigate('/admin/courses')
+    
 }
 
-
+//function to delete course
+function handleDeletecourse(){
+     const res = axios.delete(`http://localhost:3000/admin/courses/${props.course._id}`,{
+        headers:{
+           Authorization:"Bearer " + localStorage.getItem("token")
+        }
+   })
+        const data =  rea.data
+        alert("course deleted successfully :::")
+}
 
 
     return <>
@@ -78,6 +91,7 @@ async function handleUpdateCourse(){
           setCategory={setCategory}
           price={price}
           setPrice={setPrice}
+          Deletecourse={handleDeletecourse}
           />
           </>
  

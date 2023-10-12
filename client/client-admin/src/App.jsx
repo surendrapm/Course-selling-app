@@ -5,7 +5,7 @@ import Appbar from "./components/Appbar"
 import Signin from "./components/Signin"
 import Createcourse from './components/Createcourse';
 import AllCourses from './components/AllCourses';
-import Course from './components/Course';
+
 import { UpdateCourses } from './components/UpdateCourse';
 import {
   atom,

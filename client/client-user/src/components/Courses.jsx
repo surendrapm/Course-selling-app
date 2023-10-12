@@ -2,16 +2,24 @@
 /* eslint-disable react/jsx-key */
 import { Button, Card, Typography } from "@mui/material"
 import axios from "axios"
-
 import { useEffect, useState } from "react"
 import {useNavigate } from "react-router-dom";
+import { Coursecard } from "./CourseCard";
 
-
+import Slider from "react-slick";
+import LeftArrow from "../assets/left-arrow.svg"
+import RigntArrow from "../assets/right-arrow.svg"
 
 function Courses(){
  
      const [courses , setCourses] = useState([])
      const [loading, setLoading] = useState(true);
+     const [webdev,setWebdev] = useState([])
+     const [android,setandroid] = useState([])
+     const [aiml,setAiml] = useState([])
+     const [datascience,setDatascience] = useState([])
+     const [web3,setWeb3] = useState([])
+     const [gamedev,setGamedev] = useState([])
     
     useEffect(()=>{
       
@@ -39,55 +47,68 @@ function Courses(){
                                                 
     },[])
 
+    useEffect(()=>{
+           setWebdev(courses.filter((course)=>{
+             return course.category=="web-devlopment" 
+           }))
+           console.log(webdev)
+    },[])  
+
+  
     if (loading) {
         return <div>Loading...</div>;
       }
-      return <div style= {{display:"flex", flexWrap:"wrap",justifyContent:"center"}}>
-                   
-             
-              {courses.map(course => {
-          return  <Course course={course}/>}
-            )}
-      </div> 
-            
-            }
+ 
+    const slickArrowLeft = ({currentSlide,slideCount,...props}) =>(
+       <img src={LeftArrow} alt="prevArrow"{...props}/>
+    )
 
 
+    const slickArrowRight = ({currentSlide,slideCount,...props}) =>(
+      <img src={RigntArrow} alt="nextArrow"{...props}/>
+   )
 
 
- export function Course({course}){
-       
-    const navigate = useNavigate();
+      const settings = {
+        dots: false,
+        infinite: false,
+        speed: 500,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        initialSlide:0,
+        prevArrow:<slickArrowLeft/>,
+        nextArrow:<slickArrowRight/>
+      };
 
-    return <Card style={{
+
+      return <>
       
-        margin:10,
-        width:320,
-        minHeight:200,
-        padding:20
-    }}>
+    
+          <div>         
+          <Slider {...settings} className="card__container--inner">
+                {
+                  
+                  courses.map((course)=>{
+                     return <>
+                      <Coursecard course={course}></Coursecard>
+                  </>
+                  })
+                
+                }
+                </Slider>
+            
+          </div>
+      
+      </>           
+        }
 
-          <Typography textAlign={"center"} variant="h5">{course.title}</Typography>
-          <img src={course.imageLink} style={{width:310 ,height:200}}  />
-          <Typography textAlign={"center"} variant="subtitle1">{course.Description}</Typography>
-         <div style={{display:"flex" ,justifyContent:"center",marginTop:20}}>
-         <Button size = {'large'} variant="contained"
-           onClick={()=>{
-            console.log(course._id)
-           navigate("/buycourse/" + course._id);
-           }}
-        >Checkout</Button> 
-        <Button size = {'large'}
-         variant="outlined" style={{marginLeft:30}}
-  
-        
-         >Descrpition</Button>
-         </div>
-        
+
+
+
+
         
 
-    </Card>
-}
+
 
 
 

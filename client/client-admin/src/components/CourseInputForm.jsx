@@ -1,5 +1,6 @@
 import { Card, Typography ,TextField,Button, InputLabel, FormControl, Select, MenuItem} from "@mui/material"
 import {  useState } from "react"
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -7,6 +8,7 @@ function CourseInputForm({
   Isupdate,
   Createcourse,
   Updatecourse,
+  Deletecourse,
   title,
   setTitle,
   Description,
@@ -16,11 +18,13 @@ function CourseInputForm({
   category,
   setCategory,
   price,
-  setPrice
+  setPrice,
+  publish,
+  setpublish
 }) {
    
       const[message,setMessage] = useState("");       
-
+        const navigate = useNavigate()
      return <>
        <div style={{ }}>
              <div style={{
@@ -115,12 +119,17 @@ function CourseInputForm({
 
                 </Select>
                 </FormControl>
-                <Button size = {'large'} variant="contained"
-                 onClick={()=>(
-                   Isupdate?Updatecourse():Createcourse()
-                 )}
-                >{Isupdate?"Update":"add"}</Button>
                
+           {Isupdate?<Button size = {'large'} variant="contained"
+                 style={{marginTop:"10px"}}
+                 onClick={()=>(
+                   Isupdate?Updatecourse():Createcourse(),
+                   navigate('/admin/courses')
+                 )}
+                >{Isupdate?"Update":"add"}</Button>:
+                  <Button></Button>
+                }
+                  
               </Card>
              
              </div>
