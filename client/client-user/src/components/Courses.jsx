@@ -5,10 +5,9 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import {useNavigate } from "react-router-dom";
 import { Coursecard } from "./CourseCard";
-
 import Slider from "react-slick";
-import LeftArrow from "../assets/left-arrow.svg"
-import RigntArrow from "../assets/right-arrow.svg"
+import {SampleNextArrow,SamplePrevArrow}from "./Arrows"
+     
 
 function Courses(){
  
@@ -36,6 +35,18 @@ function Courses(){
               let data = response.data
               console.log(data)
               setCourses(data.courses)
+
+              const webdevCourses = data.courses.filter((course)=>{
+                return course.category=="web-devlopment" 
+              })
+
+              const AImlCourses = data.courses.filter((course)=>{
+                return course.category=="ai-ml" 
+              })
+           
+              setWebdev(webdevCourses)
+              setAiml(AImlCourses)
+              console.log(webdev)
               setLoading(false);
                 }catch(error){
                     console.error("Error fetching courses:", error);
@@ -47,60 +58,109 @@ function Courses(){
                                                 
     },[])
 
-    useEffect(()=>{
-           setWebdev(courses.filter((course)=>{
-             return course.category=="web-devlopment" 
-           }))
-           console.log(webdev)
-    },[])  
 
   
     if (loading) {
         return <div>Loading...</div>;
       }
  
-    const slickArrowLeft = ({currentSlide,slideCount,...props}) =>(
-       <img src={LeftArrow} alt="prevArrow"{...props}/>
-    )
-
-
-    const slickArrowRight = ({currentSlide,slideCount,...props}) =>(
-      <img src={RigntArrow} alt="nextArrow"{...props}/>
-   )
-
-
+   
+   
       const settings = {
-        dots: false,
+        className: "center",
         infinite: false,
-        speed: 500,
-        slidesToShow: 4,
-        slidesToScroll: 1,
-        initialSlide:0,
-        prevArrow:<slickArrowLeft/>,
-        nextArrow:<slickArrowRight/>
+        centerPadding: "60px",
+        slidesToShow: 5,
+        swipeToSlide: true,
+        nextArrow: <SampleNextArrow />,
+        prevArrow: <SamplePrevArrow />
+        
       };
 
-
-      return <>
-      
-    
-          <div>         
-          <Slider {...settings} className="card__container--inner">
+  
+  
+   return (
+       <div>  
+        
+            <Typography>T</Typography>       
+          <Slider {...settings}>
+            
                 {
                   
                   courses.map((course)=>{
-                     return <>
-                      <Coursecard course={course}></Coursecard>
-                  </>
-                  })
-                
-                }
+                     return (
+                     <div className="card_container--inner--card">
+                        <Coursecard course={course}></Coursecard>
+                      </div>
+                     )
+                    
+                  })}
+                       
+                      
                 </Slider>
-            
+
+                <div>
+                     <DisplayWebdev category={webdev}settings={settings}/>
+                     </div>
+                     <div>
+                      <DisplayAIml category={aiml} settings={settings} />
+                     </div>
           </div>
+          
       
-      </>           
-        }
+      )         
+       }
+
+function DisplayWebdev({category,settings}){
+  console.log(category)
+ return( 
+            <div>
+                <Slider {...settings}>
+            
+            {
+              
+              category.map((course)=>{
+                 return (
+                 <div>
+                    <Coursecard course={course}></Coursecard>
+                  </div>
+                 )
+                
+              })}
+                   
+                  
+            </Slider>
+            </div>
+    
+ )
+}
+
+
+function DisplayAIml({category,settings}){
+  console.log(category)
+ return( 
+            <div>
+                <Slider {...settings}>
+            
+            {
+              
+              category.map((course)=>{
+                 return (
+                 <div>
+                    <Coursecard course={course}></Coursecard>
+                  </div>
+                 )
+                
+              })}
+                   
+                  
+            </Slider>
+            </div>
+    
+ )
+}
+
+
 
 
 
