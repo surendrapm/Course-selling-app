@@ -1,4 +1,8 @@
 import { Card, Typography ,TextField,Button, InputLabel, FormControl, Select, MenuItem} from "@mui/material"
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormLabel from '@mui/material/FormLabel';
 import {  useState } from "react"
 import { useNavigate } from "react-router-dom";
 
@@ -20,7 +24,7 @@ function CourseInputForm({
   price,
   setPrice,
   publish,
-  setpublish
+  setPublished
 }) {
    
       const[message,setMessage] = useState("");       
@@ -99,7 +103,7 @@ function CourseInputForm({
                   }}
              />            
                  
-                   <FormControl fullWidth>
+                   <FormControl fullWidth style={{marginBottom:10}}>
                 <InputLabel id="demo">Category</InputLabel>
                 <Select labelId="demo-simple-select-label"
                   id="demo-simple"
@@ -119,16 +123,50 @@ function CourseInputForm({
 
                 </Select>
                 </FormControl>
+
+                <FormControl fullWidth>
+                <FormLabel id="demo-row-radio-buttons-group-label">Is-published</FormLabel>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                  value={publish}
+                  onChange={(e)=>{
+                    setPublished(e.target.value)
+                      console.log(publish)
+                  }
+                    }
+                >
+                <FormControlLabel value={true} control={<Radio />} label="True" />
+                <FormControlLabel value={false} control={<Radio />} label="False" />
+                
+         </RadioGroup>
+
+          </FormControl>
                
-           {Isupdate?<Button size = {'large'} variant="contained"
-                 style={{marginTop:"10px"}}
-                 onClick={()=>(
-                   Isupdate?Updatecourse():Createcourse(),
-                   navigate('/admin/courses')
-                 )}
-                >{Isupdate?"Update":"add"}</Button>:
-                  <Button></Button>
-                }
+           {Isupdate?(<><Button size={'large'} variant="contained"
+               style={{ marginTop: "10px" }}
+               onClick={() => (
+                 Isupdate ? Updatecourse() : Createcourse(),
+                 navigate('/admin/courses')
+               )}
+             >{Isupdate ? "Update" : "add"}</Button><Button
+              style={{ marginTop: "10px" ,
+              color:"red"
+            }}
+             onClick={()=>{
+               alert(`cofirm to delete ${title} course`)
+               Deletecourse()
+             }}
+             >Delete</Button></>
+           ):(
+                  <Button variant="contained"
+                  style={{marginTop:"10px"}}
+                  onClick={()=>{
+                    Createcourse()
+                  }}
+                  >Add course</Button>
+                )}
                   
               </Card>
              

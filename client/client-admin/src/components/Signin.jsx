@@ -62,7 +62,8 @@ return(
      onClick={()=>{
         function callback2(data){
             console.log(data.token)
-            localStorage.setItem("token",data.token)
+            localStorage.setItem("token",data.token)     
+            window.location = '/'
         }
         function callback1(res){
              res.json().then(callback2)

@@ -10,7 +10,7 @@ function Createcourse(props){
     const [imageLink,setimageLink] = useState('')
     const [price,setPrice] = useState(0)
     const [category,setCategory] = useState('None')
-    const [published,setPublished] = useState(false)
+    const [published,setPublished] = useState(true)
 
 useEffect(()=>{
    if(props.IsUpdate){
@@ -51,7 +51,9 @@ async function handleUpdateCourse(){
     Description:Description,
     imageLink:imageLink,
     category:category,
-    price:price
+    price:price,
+    published:published,
+   
   },
   {
      headers:{
@@ -72,7 +74,8 @@ function handleDeletecourse(){
         }
    })
         const data =  rea.data
-        alert("course deleted successfully :::")
+        alert('successfully deleted course :)')
+        navigate('/admin/courses')
 }
 
 
@@ -91,6 +94,8 @@ function handleDeletecourse(){
           setCategory={setCategory}
           price={price}
           setPrice={setPrice}
+          publish={published}
+          setPublished={setPublished}
           Deletecourse={handleDeletecourse}
           />
           </>

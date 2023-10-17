@@ -1,9 +1,11 @@
 import { Button, Card, Typography } from "@mui/material"
+import { useEffect } from "react"
 import { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
+import axios from "axios"
 function CourseCard({course,IsUpdate}){
        const navigate = useNavigate()
-     
+       
     return <div style={{display:"flex",marginTop:50,justifyContent: 'center',width:"100%"}}>
         <Card style={{
       
@@ -24,7 +26,11 @@ function CourseCard({course,IsUpdate}){
             </Typography>
             <div style={{display:"flex" ,justifyContent:"space-around"}}>
             {
-            IsUpdate? <Button size = {'large'} variant="contained">delete</Button>:
+            IsUpdate? <Button size = {'large'} variant="contained"
+              onClick={()=>{
+                handleDelete
+              }}
+            >delete</Button>:
             <Button size = {'large'} variant="contained"
             onClick={()=>{
              console.log(course._id)
@@ -32,7 +38,8 @@ function CourseCard({course,IsUpdate}){
             navigate("/updatecourse/" + course._id);
             }}
          >Update</Button>
-             }    
+             }
+    
            
         
             </div>
