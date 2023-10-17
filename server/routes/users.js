@@ -4,7 +4,6 @@ const {authenticateJwt,SECRET} = require('../middleware/auth')
 const jwt = require('jsonwebtoken');
 const {User,Course,Admin} = require('../db/index')
 const mongoose = require('mongoose');
-
 const router = express.Router();
 const Razorpay = require('razorpay')
 const crypto = require('crypto');
@@ -37,7 +36,7 @@ router.post('/signup',  async(req, res) => {
   });
   
   router.post('/login', async(req, res) => {
-    const { username, password } = req.headers;
+    const { username, password } = req.body;
     const user = await User.findOne({username,password})
     if (user) {
       const token = jwt.sign({ username, role: 'user' }, SECRET, { expiresIn: '1h' });
@@ -121,12 +120,8 @@ router.post('/paymentverify/:courseId',authenticateJwt,async(req,res)=>{
 
 
 
-
-
-
-
-
-  router.get('/purchasedCourses', authenticateJwt,async(req, res) => {
+router.get('/purchasedCourses', authenticateJwt,async(req, res) => {
+  console.log("purchsed hitted")
     const user = await User.findOne({username:req.user.username}).populate('purchasedCourses')
     if (user) {
       res.json({ purchasedCourses: user.purchasedCourses || [] });

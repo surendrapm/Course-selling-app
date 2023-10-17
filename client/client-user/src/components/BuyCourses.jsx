@@ -16,7 +16,7 @@ export const BuyCourse = ()=>{
                 }
               })
                             let data = response.data
-                           
+                            console.log(data)
                             setCourses(data.courses)
                             setLoading(false)
             }

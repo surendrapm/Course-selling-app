@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 //mongoose schemas
 
 const userSchema = new mongoose.Schema({
-    username:{type:String},
+    username:String,
     password:String,
     purchasedCourses:[{type:mongoose.Schema.Types.ObjectId,}]
 })

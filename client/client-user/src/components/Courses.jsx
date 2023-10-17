@@ -80,9 +80,15 @@ function Courses(){
   
   
    return (
-       <div>  
-        
-            <Typography>T</Typography>       
+       <div style={{}}>
+        <div  style={{
+          position:"relative",
+          left:"10px",
+          top:"20px"
+        }}>
+        <Typography variant={'h4'}>Trending Courses</Typography>
+          </div>  
+               
           <Slider {...settings}>
             
                 {
@@ -112,9 +118,13 @@ function Courses(){
        }
 
 function DisplayWebdev({category,settings}){
-  console.log(category)
+  console.log(category.category)
  return( 
+             
             <div>
+              <div>
+              <Typography variant={'h4'}>{category[0].category}</Typography>
+              </div>
                 <Slider {...settings}>
             
             {
@@ -140,6 +150,9 @@ function DisplayAIml({category,settings}){
   console.log(category)
  return( 
             <div>
+              <div>
+              <Typography variant={'h4'}>{category[0].category}</Typography>
+              </div>
                 <Slider {...settings}>
             
             {
