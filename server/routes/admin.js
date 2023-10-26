@@ -3,7 +3,9 @@ const jwt = require('jsonwebtoken');
 const {SECRET} = require("../middleware/auth")
 const {authenticateJwt} = require("../middleware/auth")
 const mongoose = require('mongoose')
-const {User , Admin , Course} = require('../db/index')
+const User = require('../db/user')
+const  Admin = require('../db/admin')
+const  Course = require('../db/courses')
 
 const router = express.Router();
 

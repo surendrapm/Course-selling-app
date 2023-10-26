@@ -2,11 +2,14 @@
 const express = require('express');
 const {authenticateJwt,SECRET} = require('../middleware/auth')
 const jwt = require('jsonwebtoken');
-const {User,Course,Admin} = require('../db/index')
+const User = require('../db/user')
+const  Course = require('../db/courses')
+const Subscription = require('../db/subscriptions')
 const mongoose = require('mongoose');
 const router = express.Router();
 const Razorpay = require('razorpay')
 const crypto = require('crypto');
+const { default: subscriptions } = require('razorpay/dist/types/subscriptions');
 
 //me route
 router.get("/me",authenticateJwt,async(req,res)=>{
@@ -130,5 +133,31 @@ router.get('/purchasedCourses', authenticateJwt,async(req, res) => {
     }
   });
 
+
+
+router.post('buysubscription/:userId',authenticateJwt,async(req,res)=>{
+    const SubscriptionDuration = req.body.Duration;
+    const Payment = req.body.price
+     const startDate = new Date()
+     let endDate = new Date
+
+     if(parseInt(SubscriptionDuration) === 6){
+       endDate.setMonth(endDate.getMonth() + 6)
+     }else if (SubscriptionDuration === 1){
+       endDate.setFullYear(endDate.getFullYear() + 1);
+     }else{
+         return res.status(400).json({error:'Invalid subscription type'})
+     }
+            //creating subscription to DB
+      const newSubscription = new Subscription({
+        userId,
+        SubscriptionDuration,
+        startDate,
+        endDate,
+      })
+      //save subs to db
+      await newSubscription.save();
+      
+})
 
   module.exports = router
